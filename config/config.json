@@ -1,0 +1,11 @@
+{
+  "servers":[
+    {"name": "server 1","port" : 8000,"ip":"127.0.0.1"},
+    {"name": "server 2","port" : 8001,"ip":"127.0.0.1"},
+    {"name": "server 3","port" : 8002,"ip":"127.0.0.1"},
+    {"name": "server 4","port" : 8003,"ip":"127.0.0.1"}
+  ],
+  "preMessages":[
+    "sample msg 1","sample msg 2","sample msg 3","sample msg 4","sample msg 5","sample msg 6"
+  ]
+}
