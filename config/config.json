@@ -6,6 +6,9 @@
     {"name": "server 4","port" : 8003,"ip":"127.0.0.1"}
   ],
   "preMessages":[
-    "sample msg 1","sample msg 2","sample msg 3","sample msg 4","sample msg 5","sample msg 6"
+    {"name":"message 1","data" :"sample data 1" },
+    {"name":"message 2","data" :"sample data 2" },
+    {"name":"message 3","data" :"sample data 3" },
+    {"name":"message 4","data" :"sample data 4" }
   ]
 }

@@ -20,7 +20,7 @@ body {
   margin : 2px auto;
 }
 /* Sender Component */
-.sender-section,.chat-log-window,.author-color{
+.sender-component,.chat-log-window{
   width: 80%;
   margin: 5px auto;
 }
@@ -29,16 +29,16 @@ body {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  align-items: center;
+  align-items: flex-start;
   /* border : 2px solid black; */
 }
 .author-color{
-  width: 250px;
   height : 45px;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
+  /* border : 2px solid black; */
 }
 .client-color,.server-color{
   height: 25px;
@@ -78,12 +78,11 @@ body {
 /* Chat Component */
 .chat-list{
   width: 100%;
-  height: 100%;
   /* border: 2px solid black; */
 }
 .chat-list-item{
   width: 100%;
-  height:70px;
+  height:50px;
   box-sizing: border-box;
   /* border: 2px solid black; */
 }
