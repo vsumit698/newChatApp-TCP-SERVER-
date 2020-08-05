@@ -3,12 +3,13 @@ import React from 'react';
 import Sender from './SenderCompo/sender.js'
 import ChatLog from './ChatLogCompo/chat-log.js';
 import PresetServer from './PresetServerCompo/presetServer.js';
+import Settings from './Settings/settings';
 import { Typography,message } from 'antd';
 const { Title } = Typography;
 import axios from 'axios';
-
+import {Route,NavLink} from 'react-router-dom';
 import net from 'net';
-
+var path = require('path');
 
 class App extends React.Component {
   state = {
@@ -137,7 +138,7 @@ class App extends React.Component {
     event.preventDefault();
     var fs = require('fs');
     var os = require('os');
-    var path = require('path');
+
 
     var fileName = "chatLog.csv";
 
@@ -172,31 +173,92 @@ class App extends React.Component {
     });
 
   }
-
+  deleteServers(values){
+    var deleteServers = values.user.servers;
+    let deleteServersId =0;
+    var newServers = [];
+    for (let id in this.state.servers) {
+      if(deleteServersId === deleteServers.length) break;
+      else if(deleteServers[deleteServersId] != id){
+        newServers.push(this.state.servers[id]);
+      }
+      else deleteServersId++;
+    }
+    message.success("SERVERS DELETED");
+    this.setState({servers:newServers});
+  }
+  deletePreMessages(values){
+    var deleteMessages = values.user.preMessages;
+    let deleteMessagesId =0;
+    var newPreMessages = [];
+    for (let id in this.state.preMessages) {
+      if(deleteMessagesId === deleteMessages.length) break;
+      else if(deleteMessages[deleteMessagesId] != id){
+        newPreMessages.push(this.state.preMessages[id]);
+      }
+      else deleteMessagesId++;
+    }
+    message.success("PRE-SET MESSAGES DELETED");
+    this.setState({preMessages:newPreMessages});
+  }
   render(){
+    // start path is app.html path
+    var appPath = path.join(__filename);
+    // console.log(appPath);
     return (
     <div>
       <Title level={4} style={{textAlign:'center',color:'blue'}}>Chat Application (ECHO SERVER BASED)</Title>
+      <nav className="navigation">
+        <ul>
+          <li><NavLink to={appPath} exact activeStyle={{color : 'red',textDecoration:'underline'}}>HOME</NavLink></li>
+          <li><NavLink to={{pathname : path.join(appPath,'/settings')}} exact activeStyle={{color : 'red',textDecoration:'underline'}}>SETTINGS</NavLink></li>
+        </ul>
+      </nav>
 
-      <PresetServer connectClient={()=>{this.connectClientHandler()}}
-      socket={this.state.socket}
-      presetServers={this.state.servers}
-      serverSelector={(serverId)=>{this.setState({currServer:(this.state.servers[serverId])})}}
-      addServers={(values)=>{this.addServers(values)}}>
 
-      </PresetServer>
+      <Route path={appPath} exact  render={()=>{
+        return(
+          <div className="home-page">
 
-      <Sender updateMsg={(event)=>{this.updateMsgHandler(event)}}
-      sendMsg={()=>{this.sendMsgHandler()}} message={this.state.message} socket={this.state.socket}
-      preMessages={this.state.preMessages}
-      msgSelector={(message)=>{this.setState({message:message})}}
-      addPreMessages={(values)=>{this.addPreMessages(values)}}
-      currServer={this.state.currServer}
-      socket={this.state.socket} createCsvFile={(event)=>{this.createCsvFile(event)}}>
-      </Sender>
+            <PresetServer connectClient={()=>{this.connectClientHandler()}}
+            socket={this.state.socket}
+            presetServers={this.state.servers}
+            serverSelector={(serverId)=>{this.setState({currServer:(this.state.servers[serverId])})}}
+            >
 
-      <ChatLog chatHistory={this.state.chatHistory} receiveMsg={(data)=>{this.receiveMsg(data)}}
-      chatLogWindow={this.state.chatLogWindow} chatList={this.state.chatList}></ChatLog>
+            </PresetServer>
+
+            <Sender updateMsg={(event)=>{this.updateMsgHandler(event)}}
+            sendMsg={()=>{this.sendMsgHandler()}} message={this.state.message} socket={this.state.socket}
+            preMessages={this.state.preMessages}
+            msgSelector={(message)=>{this.setState({message:message})}}
+
+            currServer={this.state.currServer}
+            socket={this.state.socket} createCsvFile={(event)=>{this.createCsvFile(event)}}>
+            </Sender>
+
+            <ChatLog chatHistory={this.state.chatHistory} receiveMsg={(data)=>{this.receiveMsg(data)}}
+            chatLogWindow={this.state.chatLogWindow} chatList={this.state.chatList}></ChatLog>
+          </div>
+        );
+      }}></Route>
+
+      <Route path={path.join(appPath,'/settings')} render={()=>{
+        return (
+          <Settings
+          addServers={(values)=>{this.addServers(values)}}
+          addPreMessages={(values)=>{this.addPreMessages(values)}}
+          deleteServers={(values)=>{this.deleteServers(values)}}
+          deletePreMessages={(values)=>{this.deletePreMessages(values)}}
+          servers={this.state.servers} preMessages={this.state.preMessages}></Settings>
+         );
+      }}>
+
+      </Route>
+
+
+
+
     </div>
     );
   }

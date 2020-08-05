@@ -1,7 +1,8 @@
 import React from 'react';
 import Chat from './ChatCompo/chat-compo.js'
 import {List} from 'antd';
-import { mount } from 'enzyme';
+import {withRouter} from 'react-router-dom';
+
 class ChatLog extends React.Component {
     shouldComponentUpdate(nextProps,nextState){
       return (this.props.chatHistory.length !== nextProps.chatHistory.length);
@@ -34,4 +35,4 @@ class ChatLog extends React.Component {
 
 }
 
-export default ChatLog;
+export default withRouter(ChatLog);
