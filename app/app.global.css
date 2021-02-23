@@ -7,78 +7,92 @@
 
 body {
   margin: 0 auto;
-  font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  background-color:rgb(255, 255, 255);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background-color: rgb(255, 255, 255);
+
   /* border: 2px solid black; */
 }
-.navigation ul{
+.navigation ul {
   width: 80%;
   margin: 0 auto;
   list-style: none;
-  /* border: 2px solid black; */
 
+  /* border: 2px solid black; */
 }
-.navigation li{
+.navigation li {
   display: inline-block;
   margin: 5px;
+
   /* border: 2px solid black; */
 }
-.navigation a{
+.navigation a {
   text-decoration: none;
-  color : black;
+  color: inherit;
 }
-.navigation a:hover{
-  color: aqua;
+
+.active-link {
+  color: red;
+}
+.unactive-link {
+  color: black;
 }
 
 /* PresetServer Component */
-.preset-server{
+.preset-server {
   width: 80%;
-  height : 50px;
+  height: 50px;
   display: flex;
   align-items: baseline;
   justify-content: space-around;
-  margin : 2px auto;
+  margin: 2px auto;
 }
+
 /* Sender Component */
-.sender-component,.chat-log-window{
+.sender-component,
+.chat-log-window {
   width: 80%;
   margin: 5px auto;
 }
-.sender-section{
+.sender-section {
   height: 50px;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
   align-items: flex-start;
+
   /* border : 2px solid black; */
 }
-.author-color{
-  height : 45px;
+.author-color {
+  height: 45px;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
+
   /* border : 2px solid black; */
 }
-.client-color,.server-color{
+.client-color,
+.server-color {
   height: 25px;
   width: 80px;
   text-align: center;
 }
-.client-color{
+.client-color {
   background-color: lightyellow;
 }
-.server-color{
+.server-color {
   background-color: bisque;
 }
+
 /* ChatLog Component */
-.chat-log-window{
+.chat-log-window {
   height: 450px;
   border-radius: 10px;
-  background-color:aliceblue;
+  background-color: aliceblue;
   overflow: scroll;
-  box-shadow: 4px 4px 4px  rgb(155, 163, 231);
+  box-shadow: 4px 4px 4px rgb(155, 163, 231);
+
   /* border : 2px solid black; */
 }
 
@@ -97,47 +111,55 @@ body {
 }
 
 /* Chat Component */
-.chat-list{
+.chat-list {
   width: 100%;
+
   /* border: 2px solid black; */
 }
-.chat-list-item{
+.chat-list-item {
   width: 100%;
-  height:50px;
+  height: 50px;
   box-sizing: border-box;
+
   /* border: 2px solid black; */
 }
-.chat-flex-client,.chat-flex-server{
+.chat-flex-client,
+.chat-flex-server {
   width: 100%;
   min-height: 35px;
   margin: 12px auto;
   display: flex;
   flex-direction: row;
+
   /* border: 2px solid green; */
 }
-.chat-flex-client{
+.chat-flex-client {
   justify-content: flex-start;
 }
-.chat-flex-server{
+.chat-flex-server {
   justify-content: flex-end;
 }
-.chat{
+.chat {
   min-width: 350px;
   font-size: 1.2rem;
+
   /* border: 2px solid blue; */
 }
-.msg-date-time{
+.msg-date-time {
   font-size: 0.8rem;
 }
+
 /* settings page */
-.setting-page{
+.setting-page {
   width: 80%;
-  margin:auto;
+  margin: auto;
+
   /* border: 2px solid black; */
 }
-.setting-page>div{
+.setting-page > div {
   width: 80%;
   margin: 10px auto;
   text-align: center;
+
   /* border: 2px solid black; */
 }
