@@ -7,7 +7,7 @@ import Settings from './Settings/settings';
 import { Typography,message } from 'antd';
 const { Title } = Typography;
 import axios from 'axios';
-import {Route,NavLink} from 'react-router-dom';
+import {Switch, Route,withRouter,Link} from 'react-router-dom';
 import net from 'net';
 var path = require('path');
 
@@ -23,6 +23,7 @@ class App extends React.Component {
     chatLogWindow : React.createRef(),
     chatList : React.createRef()
   }
+
   componentDidMount(){
     axios.get('http://localhost:3000/db')
     .then((response)=>{
@@ -32,11 +33,17 @@ class App extends React.Component {
       message.error("data FAILURE from API");
     });
 
+    this.props.history.push('/');
+
   }
+  componentDidUpdate(){
+    console.log('updating App component');
+  }
+
   connectClientHandler(){
     if(this.state.currServer){
 
-      if(!this.state.socket){// making connection with server
+      if(!this.state.socket){ // making connection with server
 
         let server = this.state.currServer;
         const socket = net.createConnection({port:server.port,host:server.ip,localPort:3001,localAddress: '127.0.0.1'},()=>{
@@ -66,9 +73,11 @@ class App extends React.Component {
           this.setState({chatHistory : newChatHistory});
 
         });
+
         socket.on('error',(err)=>{
           console.log('Error occured on  CLIENT SOCKET',err);
         });
+
         socket.on('close',(transmissionErr)=>{
           console.log('socket closed','via transmission error',transmissionErr);
           var prevConnServer = this.state.prevConnServer;
@@ -96,9 +105,11 @@ class App extends React.Component {
       throw new Error(error);
     }
   }
+
   updateMsgHandler(event){
     this.setState({message : event.target.value});
   }
+
   sendMsgHandler(){
 
     let newChatHistory = this.state.chatHistory.slice();
@@ -107,6 +118,7 @@ class App extends React.Component {
 
 
   }
+
   addServers(values){
     const userServers = values.servers; // array of user servers
     console.log('Received values of form:', values);
@@ -120,7 +132,8 @@ class App extends React.Component {
     }
     this.setState({servers : newServers});
     message.success("SERVERS added");
-  };
+  }
+
   addPreMessages(values){
     const userMessages = values.preMessages; // array of user preMessages
     console.log('Received values of form:', values);
@@ -134,6 +147,7 @@ class App extends React.Component {
     this.setState({preMessages : newPreMessages});
     message.success("Preset Messages added");
   }
+
   createCsvFile(event){
     event.preventDefault();
     var fs = require('fs');
@@ -173,6 +187,7 @@ class App extends React.Component {
     });
 
   }
+
   deleteServers(values){
     var deleteServers = values.user.servers;
     let deleteServersId =0;
@@ -187,6 +202,7 @@ class App extends React.Component {
     message.success("SERVERS DELETED");
     this.setState({servers:newServers});
   }
+
   deletePreMessages(values){
     var deleteMessages = values.user.preMessages;
     let deleteMessagesId =0;
@@ -201,63 +217,62 @@ class App extends React.Component {
     message.success("PRE-SET MESSAGES DELETED");
     this.setState({preMessages:newPreMessages});
   }
+
   render(){
-    // start path is app.html path
-    var appPath = path.join(__filename);
-    // console.log(appPath);
+
     return (
     <div>
       <Title level={4} style={{textAlign:'center',color:'blue'}}>Chat Application (ECHO SERVER BASED)</Title>
+
       <nav className="navigation">
         <ul>
-          <li><NavLink to={appPath} exact activeStyle={{color : 'red',textDecoration:'underline'}}>HOME</NavLink></li>
-          <li><NavLink to={{pathname : path.join(appPath,'/settings')}} exact activeStyle={{color : 'red',textDecoration:'underline'}}>SETTINGS</NavLink></li>
+          <li className={this.props.location.pathname==='/'?'active-link':'unactive-link'}><Link to={'/'}>HOME</Link></li>
+          <li className={this.props.location.pathname==='/settings'?'active-link':'unactive-link'}><Link to={'/settings'}>SETTINGS</Link></li>
         </ul>
       </nav>
 
+      <Switch>
+        <Route exact path={'/'} render={()=>{
+              return(
+                <div className="home-page">
 
-      <Route path={appPath} exact  render={()=>{
-        return(
-          <div className="home-page">
+                  <PresetServer connectClient={()=>{this.connectClientHandler()}}
+                  socket={this.state.socket}
+                  presetServers={this.state.servers}
+                  serverSelector={(serverId)=>{this.setState({currServer:(this.state.servers[serverId])})}}
+                  >
 
-            <PresetServer connectClient={()=>{this.connectClientHandler()}}
-            socket={this.state.socket}
-            presetServers={this.state.servers}
-            serverSelector={(serverId)=>{this.setState({currServer:(this.state.servers[serverId])})}}
-            >
+                  </PresetServer>
 
-            </PresetServer>
+                  <Sender updateMsg={(event)=>{this.updateMsgHandler(event)}}
+                  sendMsg={()=>{this.sendMsgHandler()}} message={this.state.message} socket={this.state.socket}
+                  preMessages={this.state.preMessages}
+                  msgSelector={(message)=>{this.setState({message:message})}}
 
-            <Sender updateMsg={(event)=>{this.updateMsgHandler(event)}}
-            sendMsg={()=>{this.sendMsgHandler()}} message={this.state.message} socket={this.state.socket}
-            preMessages={this.state.preMessages}
-            msgSelector={(message)=>{this.setState({message:message})}}
+                  currServer={this.state.currServer}
+                  socket={this.state.socket} createCsvFile={(event)=>{this.createCsvFile(event)}}>
+                  </Sender>
 
-            currServer={this.state.currServer}
-            socket={this.state.socket} createCsvFile={(event)=>{this.createCsvFile(event)}}>
-            </Sender>
+                  <ChatLog chatHistory={this.state.chatHistory} receiveMsg={(data)=>{this.receiveMsg(data)}}
+                  chatLogWindow={this.state.chatLogWindow} chatList={this.state.chatList}></ChatLog>
+                </div>
+              );
+        }}/>
 
-            <ChatLog chatHistory={this.state.chatHistory} receiveMsg={(data)=>{this.receiveMsg(data)}}
-            chatLogWindow={this.state.chatLogWindow} chatList={this.state.chatList}></ChatLog>
-          </div>
-        );
-      }}></Route>
-
-      <Route path={path.join(appPath,'/settings')} render={()=>{
-        return (
-          <Settings
-          addServers={(values)=>{this.addServers(values)}}
-          addPreMessages={(values)=>{this.addPreMessages(values)}}
-          deleteServers={(values)=>{this.deleteServers(values)}}
-          deletePreMessages={(values)=>{this.deletePreMessages(values)}}
-          servers={this.state.servers} preMessages={this.state.preMessages}></Settings>
-         );
-      }}>
-
-      </Route>
-
-
-
+        <Route exact path={'/settings'} render={()=>{
+          return (
+            <Settings
+            addServers={(values)=>{this.addServers(values)}}
+            addPreMessages={(values)=>{this.addPreMessages(values)}}
+            deleteServers={(values)=>{this.deleteServers(values)}}
+            deletePreMessages={(values)=>{this.deletePreMessages(values)}}
+            servers={this.state.servers} preMessages={this.state.preMessages}></Settings>
+          );
+        }}/>
+        <Route render={()=>{
+          return <div>PAGE NOT FOUND</div>;
+        }}/>
+      </Switch>
 
     </div>
     );
@@ -265,4 +280,4 @@ class App extends React.Component {
 
 }
 
-export default App;
+export default withRouter(App);
