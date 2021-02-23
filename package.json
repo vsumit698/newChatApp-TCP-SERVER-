@@ -265,7 +265,7 @@
     "@fortawesome/fontawesome-free": "^5.11.2",
     "@hot-loader/react-dom": "^16.11.0",
     "antd": "^4.4.3",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "connected-react-router": "^6.6.0",
     "core-js": "3.4.1",
     "csv-writer": "^1.6.0",
